@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+        <title>歌词助手（内测版）</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+        <link rel="stylesheet" href="layout.css">
+    </head>
+    <body>
+        <mwc-top-app-bar-fixed>
+            <div slot="title">歌词助手（内测版）</div>
+            <a class="anchor-button" slot="actionItems" href="//github.com/HyperbolaStudio/lyric-assistant-client/issues" target="_blank" title="反馈"><mwc-icon-button icon="feedback"></mwc-icon-button></a>
+            <!-- <a class="anchor-button" slot="actionItems" href="readme.html" title="帮助"><mwc-icon-button icon="help"></mwc-icon-button></a> -->
+        </mwc-top-app-bar-fixed>
+        <div id="container">
+            <main>
+                <section id="input-area">
+                    <div class="input-block">
+                        <mwc-select
+                            id="select-library"
+                            class="block"
+                            label="词库"
+                            required
+                            icon="list_alt"
+                            outlined>
+                            <mwc-list-item value='misaka_meituan'>御坂美团中v歌单</mwc-list-item>
+                            <mwc-list-item value='chinese_pop'>华语流行乐</mwc-list-item>
+                        </mwc-select>
+                    </div>
+                    <div class="input-block input-horizontal-separated expandable">
+                        <mwc-textfield
+                            id="form-vowel"
+                            class="block modify-trigger"
+                            label="韵尾"
+                            icon="abc"
+                            helper="用空格分隔"
+                            pattern="^(((-i)|(a)|(o)|(e)|(\^e)|(i)|(u)|(v)|(er)|(ai)|(ei)|(ao)|(ou)|(an)|(en)|(n)|(ang)|(eng)|(ong)|(ing))\s+)*((-i)|(a)|(o)|(e)|(\^e)|(i)|(u)|(v)|(er)|(ai)|(ei)|(ao)|(ou)|(an)|(en)|(n)|(ang)|(eng)|(ong)|(ing))?$"
+                            outlined></mwc-textfield>
+                        <mwc-select
+                            id="select-vowel-mode"
+                            class="block modify-trigger"
+                            label="匹配方式"
+                            outlined>
+                            <mwc-list-item value="similar">相似匹配</mwc-list-item>
+                            <mwc-list-item value="same">一致匹配</mwc-list-item>
+                        </mwc-select>
+                    </div>
+                    <div class="input-block input-horizontal-separated expandable">
+                        <mwc-textfield
+                            id="form-word-include"
+                            class="block modify-trigger"
+                            label="包含的词语"
+                            icon="check_circle"
+                            helper="用空格分隔"
+                            outlined></mwc-textfield>
+                        <mwc-select
+                            id="select-word-include-mode"
+                            class="block modify-trigger"
+                            label="匹配方式"
+                            outlined>
+                            <mwc-list-item value="any">出现在任何位置</mwc-list-item>
+                            <mwc-list-item value="head">出现在开头</mwc-list-item>
+                            <mwc-list-item value="tail">出现在结尾</mwc-list-item>
+                        </mwc-select>
+                    </div>
+                    <div class="input-block input-horizontal-separated expandable">
+                        <mwc-textfield
+                            id="form-word-exclude"
+                            class="block modify-trigger"
+                            label="排除的词语"
+                            icon="cancel"
+                            helper="用空格分隔"
+                            outlined></mwc-textfield>
+                        <mwc-select
+                            id="select-word-exclude-mode"
+                            class="block modify-trigger"
+                            label="匹配方式"
+                            outlined>
+                            <mwc-list-item value="any">出现在任何位置</mwc-list-item>
+                            <mwc-list-item value="head">出现在开头</mwc-list-item>
+                            <mwc-list-item value="tail">出现在结尾</mwc-list-item>
+                        </mwc-select>
+                    </div>
+                    <div class="input-block expandable">
+                        <mwc-textfield
+                            id="form-turns"
+                            class="block modify-trigger"
+                            label="查询数量"
+                            required
+                            type="number"
+                            min="1"
+                            max="32"
+                            icon="sync_alt"
+                            outlined></mwc-textfield>
+                    </div>
+                    <div class="input-block expandable">
+                        <mwc-textfield
+                            id="form-accesskey"
+                            class="block modify-trigger"
+                            label="Access Key"
+                            required
+                            icon="key"
+                            maxlength="16",
+                            minlength="16"
+                            outlined></mwc-textfield>
+                    </div>
+                    <div class="input-block only-mobile">
+                        <mwc-button id="btn-toggle" fullwidth icon="expand_less">收起输入区域</mwc-button>
+                    </div>
+                    <div class="input-block">
+                        <mwc-button id="btn-query" fullwidth raised icon="check">查询</mwc-button>
+                    </div>
+                </section>
+                <section id="output-area">
+                    <div id="result-container" class="input-block">
+                        <mwc-circular-progress id="result-progress" style="display:none" indeterminate></mwc-circular-progress>
+                        <div id="result-error">
+                        </div>
+                        <mwc-list id="result-list" multi>
+                            
+                        </mwc-list>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script src="bundle.js"></script>
+    </body>
+</html>
