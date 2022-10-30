@@ -1,6 +1,6 @@
 import { convertVowelMode, convertWordMode, QueryRequest, Vowel } from './declarations';
 import * as path from 'path';
-import { logger } from './Logger';
+import { logger } from './logger';
 import { invokeQuery } from './invokeQuery';
 import { CircularProgress as MwcCircularProgress } from "@material/mwc-circular-progress";
 import { List } from '@material/mwc-list';
