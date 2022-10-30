@@ -23,7 +23,8 @@ export function invokeQuery(query: QueryRequest){
                 pinyin: 'ce,shi',
                 vowel: '-i',
                 title: '测试标题',
-                author: 'test'
+                author: 'test',
+                id: 473740870,
             });
         }
         setTimeout(()=>resolve(res), 1000);

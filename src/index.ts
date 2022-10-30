@@ -17,6 +17,7 @@ import { List } from '@material/mwc-list';
 import { CircularProgress } from '@material/mwc-circular-progress';
 
 export const apiHost = 'https://lyric-api.myxrcrs.cn';
+export const ncmPrefix = 'https://music.163.com/#/song?id='
 
 export let queryButton = document.getElementById('btn-query') as Button;
 export let libraryForm = document.getElementById('select-library') as Select;

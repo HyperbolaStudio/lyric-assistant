@@ -48,10 +48,22 @@ class Logger {
         snackbar.onclose = ()=>snackbar.remove();
         return snackbar;
     }
-    dialog(title: string, content: string, primaryAction?: Action, secondaryAction?: Action){
+    dialog(title: string, content: string|string[], primaryAction?: Action, secondaryAction?: Action){
         let dialog = document.createElement('mwc-dialog');
         dialog.heading = title;
-        dialog.textContent = content;
+        if(typeof(content) == 'string'){
+            dialog.textContent = content;
+        }else{
+            content.forEach((s,i)=>{
+                let elm = document.createElement('span');
+                elm.textContent = s;
+                dialog.appendChild(elm);
+                if(i!=content.length-1){
+                    dialog.appendChild(document.createElement('br'));
+                }
+            });
+        }
+        
         if(primaryAction){
             this._handler(primaryAction, 'primaryAction', dialog);
         }

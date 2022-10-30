@@ -4,7 +4,7 @@ import { logger } from './Logger';
 import { invokeQuery } from './invokeQuery';
 import { CircularProgress as MwcCircularProgress } from "@material/mwc-circular-progress";
 import { List } from '@material/mwc-list';
-import { queryButton, libraryForm, vowelForm, vowelModeForm, wordIncludeForm, wordIncludeModeForm, wordExcludeForm, wordExcludeModeForm, queryNumberForm, accessKeyForm, resultList } from '.';
+import { queryButton, libraryForm, vowelForm, vowelModeForm, wordIncludeForm, wordIncludeModeForm, wordExcludeForm, wordExcludeModeForm, queryNumberForm, accessKeyForm, resultList, ncmPrefix } from '.';
 import { ResultSection } from './ResultSection';
 
 if(queryButton)queryButton.onclick = async ()=>{
@@ -32,6 +32,14 @@ if(queryButton)queryButton.onclick = async ()=>{
                 secondLine.textContent = [entry.pinyin, entry.title, entry.author].join(' - ');
                 secondLine.slot = 'secondary';
                 item.appendChild(secondLine);
+                item.onclick = ()=>{
+                    logger.dialog(
+                        '详细信息',
+                        [`歌词：${entry.line}`,`拼音：${entry.pinyin}`,`韵尾：${entry.vowel}`,`歌名：${entry.author}`,`作者：${entry.author}`],
+                        {label: 'OK', action: ()=>{}},
+                        entry.id ? {label: '访问网易云音乐', action: ()=>{window.open(ncmPrefix+entry.id, '_blank')}} : undefined
+                    )
+                }
                 return item;
             }));
         }catch(e){
