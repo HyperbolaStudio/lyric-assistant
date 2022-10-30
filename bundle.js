@@ -14746,6 +14746,94 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /***/ }),
 
+/***/ "./out/Logger.js":
+/*!***********************!*\
+  !*** ./out/Logger.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.logger = void 0;
+class Logger {
+    _handler(action, slot, dialog) {
+        let actionButton = document.createElement('mwc-button');
+        actionButton.textContent = action.label;
+        if (typeof action.action === 'string') {
+            let anchor = document.createElement('a');
+            anchor.className = 'anchor-button';
+            anchor.href = action.action;
+            anchor.slot = slot;
+            anchor.target = '_blank';
+            anchor.appendChild(actionButton);
+            actionButton.onclick = () => {
+                dialog.open = false;
+            };
+            dialog.appendChild(anchor);
+        }
+        else {
+            actionButton.onclick = () => {
+                action.action();
+                dialog.open = false;
+            };
+            actionButton.slot = slot;
+            dialog.appendChild(actionButton);
+            ;
+        }
+    }
+    snackbar(label, options = [], timeout = 5000, closeable = true) {
+        let snackbar = document.createElement('mwc-snackbar');
+        snackbar.labelText = label;
+        snackbar.timeoutMs = timeout;
+        for (let option of options) {
+            this._handler(option, 'action', snackbar);
+        }
+        if (closeable) {
+            let dismissButton = document.createElement('mwc-icon-button');
+            dismissButton.icon = 'close';
+            dismissButton.slot = 'dismiss';
+            snackbar.appendChild(dismissButton);
+        }
+        document.body.appendChild(snackbar);
+        snackbar.open = true;
+        snackbar.onclose = () => snackbar.remove();
+        return snackbar;
+    }
+    dialog(title, content, primaryAction, secondaryAction) {
+        let dialog = document.createElement('mwc-dialog');
+        dialog.heading = title;
+        if (typeof (content) == 'string') {
+            dialog.textContent = content;
+        }
+        else {
+            content.forEach((s, i) => {
+                let elm = document.createElement('span');
+                elm.textContent = s;
+                dialog.appendChild(elm);
+                if (i != content.length - 1) {
+                    dialog.appendChild(document.createElement('br'));
+                }
+            });
+        }
+        if (primaryAction) {
+            this._handler(primaryAction, 'primaryAction', dialog);
+        }
+        if (secondaryAction) {
+            this._handler(secondaryAction, 'secondaryAction', dialog);
+        }
+        document.body.appendChild(dialog);
+        dialog.open = true;
+        dialog.onclose = () => dialog.remove();
+        dialog.addEventListener('CustomEvent', (ev) => console.log(ev));
+        return dialog;
+    }
+}
+exports.logger = new Logger();
+
+
+/***/ }),
+
 /***/ "./out/ResultSection.js":
 /*!******************************!*\
   !*** ./out/ResultSection.js ***!
@@ -14852,6 +14940,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const declarations_1 = __webpack_require__(/*! ./declarations */ "./out/declarations.js");
+const Logger_1 = __webpack_require__(/*! ./Logger */ "./out/Logger.js");
 const invokeQuery_1 = __webpack_require__(/*! ./invokeQuery */ "./out/invokeQuery.js");
 const _1 = __webpack_require__(/*! . */ "./out/index.js");
 const ResultSection_1 = __webpack_require__(/*! ./ResultSection */ "./out/ResultSection.js");
@@ -14881,6 +14970,9 @@ if (_1.queryButton)
                     secondLine.textContent = [entry.pinyin, entry.title, entry.author].join(' - ');
                     secondLine.slot = 'secondary';
                     item.appendChild(secondLine);
+                    item.onclick = () => {
+                        Logger_1.logger.dialog('详细信息', [`歌词：${entry.line}`, `拼音：${entry.pinyin}`, `韵尾：${entry.vowel}`, `歌名：${entry.author}`, `作者：${entry.author}`], { label: 'OK', action: () => { } }, entry.id ? { label: '访问网易云音乐', action: () => { window.open(_1.ncmPrefix + entry.id, '_blank'); } } : undefined);
+                    };
                     return item;
                 }));
             }
@@ -14965,7 +15057,7 @@ var QueryResponseStatus;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.resultList = exports.resultError = exports.circularProgress = exports.accessKeyForm = exports.queryNumberForm = exports.wordExcludeModeForm = exports.wordExcludeForm = exports.wordIncludeModeForm = exports.wordIncludeForm = exports.vowelModeForm = exports.vowelForm = exports.libraryForm = exports.queryButton = exports.apiHost = void 0;
+exports.resultList = exports.resultError = exports.circularProgress = exports.accessKeyForm = exports.queryNumberForm = exports.wordExcludeModeForm = exports.wordExcludeForm = exports.wordIncludeModeForm = exports.wordIncludeForm = exports.vowelModeForm = exports.vowelForm = exports.libraryForm = exports.queryButton = exports.ncmPrefix = exports.apiHost = void 0;
 __webpack_require__(/*! @material/mwc-button */ "./node_modules/@material/mwc-button/mwc-button.js");
 __webpack_require__(/*! @material/mwc-dialog */ "./node_modules/@material/mwc-dialog/mwc-dialog.js");
 __webpack_require__(/*! @material/mwc-icon-button */ "./node_modules/@material/mwc-icon-button/mwc-icon-button.js");
@@ -14978,6 +15070,7 @@ __webpack_require__(/*! @material/mwc-list */ "./node_modules/@material/mwc-list
 __webpack_require__(/*! @material/mwc-list/mwc-check-list-item */ "./node_modules/@material/mwc-list/mwc-check-list-item.js");
 __webpack_require__(/*! @material/mwc-circular-progress */ "./node_modules/@material/mwc-circular-progress/mwc-circular-progress.js");
 exports.apiHost = 'https://lyric-api.myxrcrs.cn';
+exports.ncmPrefix = 'https://music.163.com/#/song?id=';
 exports.queryButton = document.getElementById('btn-query');
 exports.libraryForm = document.getElementById('select-library');
 exports.vowelForm = document.getElementById('form-vowel');
@@ -15025,7 +15118,8 @@ function invokeQuery(query) {
                 pinyin: 'ce,shi',
                 vowel: '-i',
                 title: '测试标题',
-                author: 'test'
+                author: 'test',
+                id: 473740870,
             });
         }
         setTimeout(() => resolve(res), 1000);
