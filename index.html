@@ -26,8 +26,6 @@
                             required
                             icon="list_alt"
                             outlined>
-                            <mwc-list-item value='misaka_meituan'>御坂美团中v歌单</mwc-list-item>
-                            <mwc-list-item value='chinese_pop'>华语流行乐</mwc-list-item>
                         </mwc-select>
                     </div>
                     <div class="input-block input-horizontal-separated expandable">
@@ -101,14 +99,24 @@
                             id="form-accesskey"
                             class="block modify-trigger"
                             label="Access Key"
-                            required
                             icon="key"
-                            maxlength="16",
-                            minlength="16"
                             outlined></mwc-textfield>
                     </div>
-                    <div class="input-block only-mobile">
-                        <mwc-button id="btn-toggle" fullwidth icon="expand_less">收起输入区域</mwc-button>
+                    <div class="input-block expandable">
+                        <mwc-check-list-item 
+                            class="modify-trigger" 
+                            id="check-use-3rd-party-api">
+                            使用第三方API
+                        </mwc-check-list-item>
+                    </div>
+                    <div class="input-block expandable">
+                        <mwc-textfield
+                            id="form-api-uri"
+                            class="block modify-trigger"
+                            label="API"
+                            required
+                            icon="api"
+                            outlined></mwc-textfield>
                     </div>
                     <div class="input-block">
                         <mwc-button id="btn-query" fullwidth raised icon="check">查询</mwc-button>
