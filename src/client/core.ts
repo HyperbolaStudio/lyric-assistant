@@ -1,13 +1,42 @@
-import { convertVowelMode, convertWordMode, QueryRequest, Vowel } from './declarations';
-import * as path from 'path';
+import { convertVowelMode, convertWordMode, CorpusEntry, QueryRequest, Vowel } from '../common/PayloadUtils';
 import { logger } from './logger';
 import { invokeQuery } from './invokeQuery';
 import { CircularProgress as MwcCircularProgress } from "@material/mwc-circular-progress";
 import { List } from '@material/mwc-list';
-import { queryButton, libraryForm, vowelForm, vowelModeForm, wordIncludeForm, wordIncludeModeForm, wordExcludeForm, wordExcludeModeForm, queryNumberForm, accessKeyForm, resultList, ncmPrefix } from '.';
+import { queryButton, libraryForm, vowelForm, vowelModeForm, wordIncludeForm, wordIncludeModeForm, wordExcludeForm, wordExcludeModeForm, queryNumberForm, accessKeyForm, resultList, ncmPrefix, useThirdPartyApiCheckbox, apiUriForm } from '.';
 import { ResultSection } from './ResultSection';
+import { syncCorpusList } from './syncCorpusList';
+import { func, suspendSaving } from './autosave';
 
-if(queryButton)queryButton.onclick = async ()=>{
+(()=>{
+    let f = useThirdPartyApiCheckbox.onclick;
+    useThirdPartyApiCheckbox.onclick = null;
+    useThirdPartyApiCheckbox.onclick = async()=>{
+        if(f)await (f as any)();
+        console.log(1);
+        if(useThirdPartyApiCheckbox.selected == true){
+            apiUriForm.style.display = '';
+        }else{
+            apiUriForm.style.display = 'none';
+        }
+    }
+})();
+
+(async()=>{
+    let list: CorpusEntry[] = await syncCorpusList();
+    suspendSaving.suspendSaving = true;
+    libraryForm.append(...list.map(entry=>{
+        let elm = document.createElement('mwc-list-item');
+        elm.value = entry.name;
+        elm.textContent = entry.label;
+        return elm;
+    }));
+    libraryForm.value = localStorage.getItem('library') ?? '';
+    libraryForm.onchange = func;
+    suspendSaving.suspendSaving = false;
+})();
+
+queryButton.onclick = async ()=>{
     let allValid = true;
     for(let elm of [libraryForm, vowelForm, vowelModeForm, wordIncludeForm, wordIncludeModeForm, wordExcludeForm, wordExcludeModeForm, queryNumberForm, accessKeyForm]){
         if(!elm.validity.valid){

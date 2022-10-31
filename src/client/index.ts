@@ -9,6 +9,7 @@ import '@material/mwc-radio';
 import '@material/mwc-list';
 import '@material/mwc-list/mwc-check-list-item';
 import '@material/mwc-circular-progress';
+import '@material/mwc-snackbar';
 
 import { Button } from '@material/mwc-button';
 import { TextField } from '@material/mwc-textfield';
@@ -32,6 +33,9 @@ export let accessKeyForm = document.getElementById('form-accesskey') as TextFiel
 export let circularProgress = document.getElementById('result-progress') as CircularProgress;
 export let resultError = document.getElementById('result-error') as HTMLDivElement;
 export let resultList = document.getElementById('result-list') as List;
+export let useThirdPartyApiCheckbox = document.getElementById('check-use-3rd-party-api') as CheckListItem;
+export let apiUriForm = document.getElementById('form-api-uri') as TextField;
 
-import './core';
 import './autosave';
+import './core';
+import { CheckListItem } from '@material/mwc-list/mwc-check-list-item';

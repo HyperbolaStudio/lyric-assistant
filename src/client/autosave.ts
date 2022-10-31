@@ -1,7 +1,7 @@
-import { accessKeyForm, libraryForm, queryNumberForm, vowelForm, vowelModeForm, wordExcludeForm, wordExcludeModeForm, wordIncludeForm, wordIncludeModeForm } from ".";
-import { Vowel, convertVowelMode, convertWordMode } from "./declarations";
+import { accessKeyForm, apiUriForm, libraryForm, queryNumberForm, useThirdPartyApiCheckbox, vowelForm, vowelModeForm, wordExcludeForm, wordExcludeModeForm, wordIncludeForm, wordIncludeModeForm } from ".";
+import { Vowel, convertVowelMode, convertWordMode } from "../common/PayloadUtils";
 
-let suspendSaving = true;
+export let suspendSaving = {suspendSaving: true};
 
 (()=>{
     libraryForm.value = localStorage.getItem('library') ?? '';
@@ -13,12 +13,13 @@ let suspendSaving = true;
     wordExcludeModeForm.value = localStorage.getItem('wordExcludeMode') ?? '';
     queryNumberForm.value = localStorage.getItem('queryNumber') ?? '';
     accessKeyForm.value = localStorage.getItem('accessKey') ?? '';
-    suspendSaving = false;
+    useThirdPartyApiCheckbox.selected = localStorage.getItem('useThirdPartyApi') == 'true';
+    apiUriForm.value = localStorage.getItem('apiUri') ?? '';
+    suspendSaving.suspendSaving = false;
 })();
-
-for(let elm of document.getElementsByClassName('modify-trigger')){
-    (elm as any).onchange = ()=>{
-        if(!suspendSaving){
+export let func = async()=>{
+    return new Promise<void>((resolve,reject)=>{
+        if(!suspendSaving.suspendSaving)setTimeout(()=>{
             let data: Record<string, string> = {
                 library: libraryForm.value,
                 vowel: vowelForm.value,
@@ -29,10 +30,23 @@ for(let elm of document.getElementsByClassName('modify-trigger')){
                 wordExcludeMode: wordExcludeModeForm.value,
                 queryNumber: queryNumberForm.value,
                 accessKey: accessKeyForm.value,
-            }
+                useThirdPartyApi: useThirdPartyApiCheckbox.selected.toString(),
+                apiUri: apiUriForm.value,
+            };
             for(let p in data){
                 localStorage.setItem(p, data[p]);
             }
-        }
+            resolve();
+        }, 10);
+        else resolve();
+    });
+    
+}
+for(let elm of document.getElementsByClassName('modify-trigger') as any){
+    if(typeof(elm.selected) == 'boolean'){
+        elm.onclick = func;
+    }else{
+        console.log(elm.tagName);
+        elm.onchange = func;
     }
 }

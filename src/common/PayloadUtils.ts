@@ -62,3 +62,21 @@ export type QueryResponse = {
     status: Exclude<QueryResponseStatus, QueryResponseStatus.OK>,
     message: string,
 }
+
+export enum ListStatus {
+    OK,
+    ServerError,
+}
+
+export interface CorpusEntry {
+    name: string,
+    label: string,
+}
+
+export type ListResponse =  {
+    status: ListStatus.OK,
+    body: CorpusEntry[],
+} | {
+    status: Exclude<ListStatus, ListStatus.OK>,
+    message: string,
+}

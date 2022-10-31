@@ -1,6 +1,5 @@
-import { QueryRequest, QueryResponse, QueryResponseBody, QueryResponseStatus } from "./declarations";
+import { QueryRequest, QueryResponse, QueryResponseBody, QueryResponseStatus } from "../common/PayloadUtils";
 import axios from 'axios';
-import * as path from 'path';
 import { apiHost } from ".";
 import { queryRequestValidate } from "./queryResponseValidate";
 

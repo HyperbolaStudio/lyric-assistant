@@ -1,0 +1,42 @@
+{
+    "title": "Server Config",
+    "type": "object",
+    "properties": {
+        "port": {
+            "type": "integer"
+        },
+        "host": {
+            "type": "string"
+        },
+        "corpus": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "label": {"type": "string"},
+                    "path": {"type": "string"}
+                },
+                "required": ["name", "label", "path"]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "authority": {
+            "type": "object",
+            "properties": {
+                "user_list": {"type": "string"},
+                "db": {"type": "string"}
+            },
+            "required": ["user_list", "db"]
+        },
+        "log": {
+            "type": "object",
+            "properties": {
+                "dir": {"type": "string"}
+            },
+            "required": ["dir"]
+        }
+    },
+    "required": ["port", "corpus", "log"]
+}

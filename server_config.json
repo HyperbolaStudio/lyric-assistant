@@ -1,0 +1,21 @@
+{
+    "port": 2277,
+    "corpus": [
+        {
+            "name": "misaka_meituan",
+            "label": "御坂美团中v歌单",
+            "path": "data/corpus_misaka_meituan.db"
+        },{
+            "name": "chinese_pop",
+            "label": "华语流行乐",
+            "path": "data/corpus_chinese_pop.db"
+        }
+    ],
+    "authority": {
+        "user_list": "data/user_list.json",
+        "db": "user_list.db"
+    },
+    "log": {
+        "dir": "data/log/"
+    }
+}

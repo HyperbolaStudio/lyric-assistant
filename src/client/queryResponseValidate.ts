@@ -1,4 +1,4 @@
-import { QueryResponse, QueryResponseStatus } from "./declarations";
+import { QueryResponse, QueryResponseStatus } from "../common/PayloadUtils";
 
 export function queryRequestValidate(data: any): data is QueryResponse{
     if(!data)return false;
