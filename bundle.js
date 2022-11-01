@@ -22299,6 +22299,7 @@ var ResultSection;
     function clearResult() {
         _1.resultList.innerHTML = '';
         _1.resultError.innerHTML = '';
+        _1.queryCountField.innerHTML = '';
         CircularProgress.hide();
     }
     ResultSection.clearResult = clearResult;
@@ -22317,6 +22318,17 @@ var ResultSection;
         _1.resultError.textContent = e.toString();
     }
     ResultSection.showError = showError;
+    function showQueryCount(count, actualCount, total, available) {
+        let s = `${count}请求，${actualCount}已获取，`;
+        if (total == -1) {
+            s += '每日可查询无限条。';
+        }
+        else {
+            s += `每日可查询${total}条，今日剩余${available}条。`;
+        }
+        _1.queryCountField.textContent = s;
+    }
+    ResultSection.showQueryCount = showQueryCount;
 })(ResultSection = exports.ResultSection || (exports.ResultSection = {}));
 
 
@@ -22468,7 +22480,7 @@ _1.queryButton.onclick = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             let res = yield (0, invokeQuery_1.invokeQuery)(parseQuery());
             ResultSection_1.ResultSection.CircularProgress.hide();
-            _1.resultList.append(...res.map(entry => {
+            _1.resultList.append(...res.body.map(entry => {
                 let item = document.createElement('mwc-list-item');
                 item.twoline = true;
                 item.setAttribute('entry-data', JSON.stringify(entry));
@@ -22484,6 +22496,7 @@ _1.queryButton.onclick = () => __awaiter(void 0, void 0, void 0, function* () {
                 };
                 return item;
             }));
+            ResultSection_1.ResultSection.showQueryCount(_1.queryNumberForm.value, res.body.length, res.queryNumber.total, res.queryNumber.available);
         }
         catch (e) {
             ResultSection_1.ResultSection.clearResult();
@@ -22544,7 +22557,7 @@ exports.getApiHost = getApiHost;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.apiUriForm = exports.useThirdPartyApiCheckbox = exports.resultList = exports.resultError = exports.circularProgress = exports.accessKeyForm = exports.queryNumberForm = exports.wordExcludeModeForm = exports.wordExcludeForm = exports.wordIncludeModeForm = exports.wordIncludeForm = exports.vowelModeForm = exports.vowelForm = exports.libraryForm = exports.queryButton = exports.ncmPrefix = exports.apiHost = void 0;
+exports.queryCountField = exports.apiUriForm = exports.useThirdPartyApiCheckbox = exports.resultList = exports.resultError = exports.circularProgress = exports.accessKeyForm = exports.queryNumberForm = exports.wordExcludeModeForm = exports.wordExcludeForm = exports.wordIncludeModeForm = exports.wordIncludeForm = exports.vowelModeForm = exports.vowelForm = exports.libraryForm = exports.queryButton = exports.ncmPrefix = exports.apiHost = void 0;
 __webpack_require__(/*! @material/mwc-button */ "./node_modules/@material/mwc-button/mwc-button.js");
 __webpack_require__(/*! @material/mwc-dialog */ "./node_modules/@material/mwc-dialog/mwc-dialog.js");
 __webpack_require__(/*! @material/mwc-icon-button */ "./node_modules/@material/mwc-icon-button/mwc-icon-button.js");
@@ -22574,6 +22587,7 @@ exports.resultError = document.getElementById('result-error');
 exports.resultList = document.getElementById('result-list');
 exports.useThirdPartyApiCheckbox = document.getElementById('check-use-3rd-party-api');
 exports.apiUriForm = document.getElementById('form-api-uri');
+exports.queryCountField = document.getElementById('query-count');
 __webpack_require__(/*! ./autosave */ "./out/client/autosave.js");
 __webpack_require__(/*! ./core */ "./out/client/core.js");
 
@@ -22612,7 +22626,7 @@ function invokeQuery(query) {
         if (rawRes.data.status != PayloadUtils_1.QueryResponseStatus.OK) {
             throw new Error(`${PayloadUtils_1.QueryResponseStatus[rawRes.data.status]}: ${rawRes.data.message}`);
         }
-        return rawRes.data.body;
+        return rawRes.data;
     });
 }
 exports.invokeQuery = invokeQuery;
