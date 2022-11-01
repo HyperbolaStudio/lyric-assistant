@@ -50,7 +50,7 @@ queryButton.onclick = async ()=>{
         try{
             let res = await invokeQuery(parseQuery());
             ResultSection.CircularProgress.hide();
-            resultList.append(...res.map(entry=>{
+            resultList.append(...res.body.map(entry=>{
                 let item = document.createElement('mwc-list-item');
                 item.twoline = true;
                 item.setAttribute('entry-data', JSON.stringify(entry));
@@ -71,6 +71,12 @@ queryButton.onclick = async ()=>{
                 }
                 return item;
             }));
+            ResultSection.showQueryCount(
+                queryNumberForm.value, 
+                res.body.length, 
+                res.queryNumber.total, 
+                res.queryNumber.available
+            );
         }catch(e){
             ResultSection.clearResult();
             ResultSection.showError(e);

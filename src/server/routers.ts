@@ -6,6 +6,7 @@ import { logger, debugLogger } from "./logger";
 const ajv = new Ajv();
 import * as queryRequestSchema from "../schema/queryRequest.json";
 import { patternizeWords } from "./patternizeWords";
+import { matchSimilarVowels } from "./matchSimilarVowels";
 
 export function routers(server: Server){
 
@@ -59,10 +60,14 @@ export function routers(server: Server){
                     status: QueryResponseStatus.PermissionDenied,
                     message: 'Permission denied',
                 }
-                let queryNumber = await instance.getQueryNumbers(query.accessKey);
-                if(!await instance.updateUserQuery(query.accessKey)) return {
+                if(query.queryNumber > 32) return {
                     status: QueryResponseStatus.QueryNumberLimitExceeded,
-                    message: `Query number limit exceeded. Total ${queryNumber.total}, available ${queryNumber.available}, but queried ${query.queryNumber}.`,
+                    message: `Single query count limit exceeded. Required less than or equal 32, but queried ${query.queryNumber}.`,
+                }
+                let queryNumberInfo = await instance.getQueryNumbers(query.accessKey);
+                if(!await instance.updateUserQuery(query.accessKey, query.queryNumber)) return {
+                    status: QueryResponseStatus.QueryNumberLimitExceeded,
+                    message: `Daily query count limit exceeded. Total ${queryNumberInfo.total}, available ${queryNumberInfo.available}, but queried ${query.queryNumber}. Please retry tomorrow.`,
                 }
                 if(!(query.library in instance.corpusMap)) return {
                     status: QueryResponseStatus.CorpusLibraryNotExist,
@@ -72,12 +77,15 @@ export function routers(server: Server){
                     status: QueryResponseStatus.OK,
                     body: await instance.invokeQuery(
                         query.library,
-                        query.vowel,
+                        matchSimilarVowels(query.vowel, query.vowelMode),
                         patternizeWords(query.wordInclude, query.wordIncludeMode),
                         patternizeWords(query.wordExclude, query.wordExcludeMode),
                         query.queryNumber,
                     ),
-                    queryNumber
+                    queryNumber: {
+                        total: queryNumberInfo.total,
+                        available: queryNumberInfo.available - query.queryNumber,
+                    }
                 }
             }catch(e: any){
                 logger.error(`An internal server error occurred. Request ${request.info.id}.\n ${e.stack ?? e}`);

@@ -35,6 +35,7 @@ export let resultError = document.getElementById('result-error') as HTMLDivEleme
 export let resultList = document.getElementById('result-list') as List;
 export let useThirdPartyApiCheckbox = document.getElementById('check-use-3rd-party-api') as CheckListItem;
 export let apiUriForm = document.getElementById('form-api-uri') as TextField;
+export let queryCountField = document.getElementById('query-count') as HTMLDivElement;
 
 import './autosave';
 import './core';

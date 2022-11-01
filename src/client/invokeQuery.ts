@@ -9,5 +9,5 @@ export async function invokeQuery(query: QueryRequest){
     if(rawRes.data.status != QueryResponseStatus.OK){
         throw new Error(`${QueryResponseStatus[rawRes.data.status]}: ${rawRes.data.message}`);
     }
-    return rawRes.data.body as QueryResponseBody[];
+    return rawRes.data as QueryResponse & {status: QueryResponseStatus.OK};
 }

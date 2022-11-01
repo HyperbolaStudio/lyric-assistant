@@ -67,18 +67,50 @@ export class Instance{
 
     hasUser(accessKey: string){
         if(!this.userList)return true;
-        if(accessKey in this.userList)return true;
-        return false;
+        return accessKey in this.userList
     }
 
     async getQueryNumbers(accessKey: string){
+        if(this.authDatabase && this.userList){
+            let total = this.userList[accessKey].maxQueries;
+            let res = await this.authDatabase.get(`SELECT * FROM auth WHERE access_key = ?`,accessKey);
+            if(res){
+                if(Math.floor(Date.now()/86400000) > Math.floor(new Date(res.last_query_time).getTime()/86400000)){
+                    await this.authDatabase.run(
+                        `UPDATE auth SET query_used = 0, last_query_time = ? WHERE access_key = ?`,
+                        (new Date()).toISOString().split('T')[0],
+                        accessKey,
+                    );
+                    return {total, available: total};
+                }else{
+                    return {total, available: total - res.query_used}
+                }
+            }else{
+                await this.authDatabase.run(
+                    `INSERT INTO auth VALUES (?,0,?)`,
+                    accessKey,
+                    (new Date()).toISOString().split('T')[0],
+                );
+                return {total, available: total};
+            }
+        }
         return {
-            total: 10,
-            available: 10,
+            total: -1,
+            available: -1,
         }
     }
 
-    async updateUserQuery(accessKey: string){
+    async updateUserQuery(accessKey: string, count: number){
+        if(!this.authDatabase)return true;
+        let queryNumberInfo = await this.getQueryNumbers(accessKey);
+        if(queryNumberInfo.total == -1)return true;
+        if(queryNumberInfo.available < count) return false;
+        await this.authDatabase.run(
+            `UPDATE auth SET query_used = ?, last_query_time = ? WHERE access_key = ?`,
+            queryNumberInfo.total - queryNumberInfo.available + count,
+            (new Date()).toISOString().split('T')[0],
+            accessKey,
+        );
         return true;
     }
 

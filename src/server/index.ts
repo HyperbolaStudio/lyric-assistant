@@ -20,4 +20,5 @@ export const instance = new Instance();
 (async()=>{
     await instance.init();
     routers(instance.server);
+    await instance.getQueryNumbers('0000000000000000');
 })();
