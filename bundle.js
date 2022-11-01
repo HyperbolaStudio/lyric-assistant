@@ -22476,11 +22476,11 @@ _1.queryButton.onclick = () => __awaiter(void 0, void 0, void 0, function* () {
                 firstLine.textContent = entry.line;
                 item.appendChild(firstLine);
                 let secondLine = document.createElement('span');
-                secondLine.textContent = [entry.pinyin, entry.title, entry.author].join(' - ');
+                secondLine.textContent = [entry.pinyin, entry.title, entry.singer].join(' - ');
                 secondLine.slot = 'secondary';
                 item.appendChild(secondLine);
                 item.onclick = () => {
-                    logger_1.logger.dialog('详细信息', [`歌词：${entry.line}`, `拼音：${entry.pinyin}`, `韵尾：${entry.vowel}`, `歌名：${entry.author}`, `作者：${entry.author}`], { label: 'OK', action: () => { } }, entry.id ? { label: '访问网易云音乐', action: () => { window.open(_1.ncmPrefix + entry.id, '_blank'); } } : undefined);
+                    logger_1.logger.dialog('详细信息', [`歌词：${entry.line}`, `拼音：${entry.pinyin}`, `韵尾：${entry.vowel}`, `歌名：${entry.title}`, `作者：${entry.singer}`], { label: 'OK', action: () => { } }, entry.id ? { label: '访问网易云音乐', action: () => { window.open(_1.ncmPrefix + entry.id, '_blank'); } } : undefined);
                 };
                 return item;
             }));
@@ -22589,31 +22589,30 @@ __webpack_require__(/*! ./core */ "./out/client/core.js");
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.invokeQuery = void 0;
+const PayloadUtils_1 = __webpack_require__(/*! ../common/PayloadUtils */ "./out/common/PayloadUtils.js");
+const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+const getApiHost_1 = __webpack_require__(/*! ./getApiHost */ "./out/client/getApiHost.js");
 function invokeQuery(query) {
-    // let rawRes = await(axios.post(path.join(apiHost, 'query'), query));
-    // if(!queryRequestValidate(rawRes.data)){
-    //     throw new Error(`Format: Invalid response format.`);
-    // }
-    // if(rawRes.data.status != QueryResponseStatus.OK){
-    //     throw new Error(`${QueryResponseStatus[rawRes.data.status]}: ${rawRes.data.message}`);
-    // }
-    // let res = rawRes.data.body;
-    return new Promise((resolve, reject) => {
-        let times = query.queryNumber;
-        let res = [];
-        for (let i = 0; i < times; i++) {
-            res.push({
-                line: `${i}测试`,
-                pinyin: 'ce,shi',
-                vowel: '-i',
-                title: '测试标题',
-                author: 'test',
-                id: 473740870,
-            });
+    return __awaiter(this, void 0, void 0, function* () {
+        let rawRes = yield (axios_1.default.post((0, getApiHost_1.getApiHost)() + '/query', query));
+        if (rawRes.data.status != PayloadUtils_1.QueryResponseStatus.OK) {
+            throw new Error(`${PayloadUtils_1.QueryResponseStatus[rawRes.data.status]}: ${rawRes.data.message}`);
         }
-        setTimeout(() => resolve(res), 1000);
+        return rawRes.data.body;
     });
 }
 exports.invokeQuery = invokeQuery;
@@ -22778,7 +22777,8 @@ exports.syncCorpusList = syncCorpusList;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListStatus = exports.QueryResponseStatus = exports.convertWordMode = exports.WordMode = exports.convertVowelMode = exports.VowelMode = void 0;
+exports.ListStatus = exports.QueryResponseStatus = exports.convertWordMode = exports.WordMode = exports.convertVowelMode = exports.VowelMode = exports.vowelList = void 0;
+exports.vowelList = ['-i', 'a', 'o', 'e', '^e', 'i', 'u', 'v', 'er', 'ai', 'ei', 'ao', 'ou', 'an', 'en', 'n', 'ang', 'eng', 'ong', 'ing'];
 var VowelMode;
 (function (VowelMode) {
     VowelMode[VowelMode["Similar"] = 0] = "Similar";
@@ -22811,7 +22811,8 @@ var QueryResponseStatus;
     QueryResponseStatus[QueryResponseStatus["PermissionDenied"] = 1] = "PermissionDenied";
     QueryResponseStatus[QueryResponseStatus["QueryNumberLimitExceeded"] = 2] = "QueryNumberLimitExceeded";
     QueryResponseStatus[QueryResponseStatus["FormatError"] = 3] = "FormatError";
-    QueryResponseStatus[QueryResponseStatus["ServerError"] = 4] = "ServerError";
+    QueryResponseStatus[QueryResponseStatus["CorpusLibraryNotExist"] = 4] = "CorpusLibraryNotExist";
+    QueryResponseStatus[QueryResponseStatus["ServerError"] = 5] = "ServerError";
 })(QueryResponseStatus = exports.QueryResponseStatus || (exports.QueryResponseStatus = {}));
 var ListStatus;
 (function (ListStatus) {
