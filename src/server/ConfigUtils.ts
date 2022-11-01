@@ -30,7 +30,7 @@ export function readConfig(){
         }
         return config;
     }catch(e: any){
-        console.error(`Unable to read configuration. \n${e.stack ?? e}`);
+        console.error(`FATAL: Unable to read configuration. \n${e.stack ?? e}`);
         process.exit(1);
     }
 }

@@ -58,13 +58,13 @@ queryButton.onclick = async ()=>{
                 firstLine.textContent = entry.line;
                 item.appendChild(firstLine);
                 let secondLine = document.createElement('span');
-                secondLine.textContent = [entry.pinyin, entry.title, entry.author].join(' - ');
+                secondLine.textContent = [entry.pinyin, entry.title, entry.singer].join(' - ');
                 secondLine.slot = 'secondary';
                 item.appendChild(secondLine);
                 item.onclick = ()=>{
                     logger.dialog(
                         '详细信息',
-                        [`歌词：${entry.line}`,`拼音：${entry.pinyin}`,`韵尾：${entry.vowel}`,`歌名：${entry.author}`,`作者：${entry.author}`],
+                        [`歌词：${entry.line}`,`拼音：${entry.pinyin}`,`韵尾：${entry.vowel}`,`歌名：${entry.title}`,`作者：${entry.singer}`],
                         {label: 'OK', action: ()=>{}},
                         entry.id ? {label: '访问网易云音乐', action: ()=>{window.open(ncmPrefix+entry.id, '_blank')}} : undefined
                     )

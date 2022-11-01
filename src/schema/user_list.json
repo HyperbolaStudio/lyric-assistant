@@ -1,0 +1,16 @@
+{
+    "title": "User List",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "accessKey": {"type": "string"},
+            "userInfo": {
+                "type": "object",
+                "properties": {
+                    "maxQueries": {"type": "integer"}
+                }
+            }
+        }
+    }
+}

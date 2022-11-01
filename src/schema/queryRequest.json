@@ -1,0 +1,52 @@
+{
+    "type": "object",
+    "properties": {
+        "library": {"type": "string"},
+        "vowel": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["-i", "a", "o", "e", "^e", "i", "u", "v", "er", "ai", "ei", "ao", "ou", "an", "en", "n", "ang", "eng", "ong", "ing"]
+            }
+        },
+        "vowelMode": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "wordInclude": {
+            "type": "array",
+            "items": {"type": "string"}
+        },
+        "wordIncludeMode": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+        },
+        "wordExclude": {
+            "type": "array",
+            "items": {"type": "string"}
+        },
+        "wordExcludeMode": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+        },
+        "queryNumber": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "accessKey": {"type": "string"}
+    },
+    "required": [
+        "library",
+        "vowel",
+        "vowelMode",
+        "wordInclude",
+        "wordIncludeMode",
+        "wordExclude",
+        "wordExcludeMode",
+        "queryNumber",
+        "accessKey"
+    ]
+}

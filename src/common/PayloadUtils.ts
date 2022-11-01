@@ -1,4 +1,5 @@
 export type Vowel = '-i' | 'a' | 'o' | 'e' | '^e' | 'i' | 'u' | 'v' | 'er' | 'ai' | 'ei' | 'ao' | 'ou' | 'an' | 'en' | 'n' | 'ang' | 'eng' | 'ong' | 'ing';
+export const vowelList: Vowel[] = ['-i', 'a', 'o', 'e', '^e', 'i', 'u', 'v', 'er', 'ai', 'ei', 'ao', 'ou', 'an', 'en', 'n', 'ang', 'eng', 'ong', 'ing'];
 
 export enum VowelMode{
     Similar,
@@ -43,6 +44,7 @@ export enum QueryResponseStatus{
     PermissionDenied,
     QueryNumberLimitExceeded,
     FormatError,
+    CorpusLibraryNotExist,
     ServerError,
 }
 
@@ -51,13 +53,17 @@ export interface QueryResponseBody{
     pinyin: string,
     vowel: string,
     title: string,
-    author?: string,
+    singer?: string,
     id?: number,
 }
 
 export type QueryResponse = {
     status: QueryResponseStatus.OK,
     body: QueryResponseBody[],
+    queryNumber: {
+        total: number,
+        available: number,
+    }
 } | {
     status: Exclude<QueryResponseStatus, QueryResponseStatus.OK>,
     message: string,

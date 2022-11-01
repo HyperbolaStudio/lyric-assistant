@@ -11,10 +11,6 @@
             "path": "data/corpus_chinese_pop.db"
         }
     ],
-    "authority": {
-        "user_list": "data/user_list.json",
-        "db": "user_list.db"
-    },
     "log": {
         "dir": "data/log/"
     }
