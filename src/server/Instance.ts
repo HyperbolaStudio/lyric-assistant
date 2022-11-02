@@ -16,7 +16,7 @@ export class Instance{
         host: config.host,
     });;
 
-    private async connectCorpusDatabase(){
+    async connectCorpusDatabase(){
         config.corpus.forEach(async corpus=>{
             try{
                 this.corpusMap[corpus.name] =  await sqlite.open({
@@ -32,7 +32,7 @@ export class Instance{
         });
     }
 
-    private async readAuth(){
+    async readAuth(){
         try{
             this.userList = UserListUtils.getUserList();
             if(config.authority){
@@ -49,7 +49,7 @@ export class Instance{
         
     }
 
-    private async startHttpServer(){
+    async startHttpServer(){
         try{
             await this.server.start();
             logger.log('Http server started at %s', this.server.info.uri);

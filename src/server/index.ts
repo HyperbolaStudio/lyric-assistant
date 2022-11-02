@@ -3,6 +3,7 @@ export const config = readConfig();
 import { logger } from './logger';
 import { Instance } from './Instance';
 import { routers } from './routers';
+import Utils from './utils';
 
 logger.info('Server started.');
 
@@ -17,8 +18,17 @@ process.on('exit', ()=>{
 
 export const instance = new Instance();
 
-(async()=>{
-    await instance.init();
-    routers(instance.server);
-    await instance.getQueryNumbers('0000000000000000');
-})();
+if(process.argv[2]){
+    if(process.argv[2] in Utils){
+        (Utils as any)[process.argv[2]](...process.argv.slice(3));
+    }else{
+        logger.fatal(`Invalid util name: %s`, process.argv[2]);
+        process.exit(1);
+    }
+}else{
+    (async()=>{
+        await instance.init();
+        routers(instance.server);
+    })();
+}
+
