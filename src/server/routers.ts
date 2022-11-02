@@ -60,6 +60,7 @@ export function routers(server: Server){
                     status: QueryResponseStatus.PermissionDenied,
                     message: 'Permission denied',
                 }
+                debugLogger.debug(`Request %s, user %s`, request.info.id, query.accessKey);
                 if(query.queryNumber > 32) return {
                     status: QueryResponseStatus.QueryNumberLimitExceeded,
                     message: `Single query count limit exceeded. Required less than or equal 32, but queried ${query.queryNumber}.`,
