@@ -15,6 +15,11 @@ export let suspendSaving = {suspendSaving: true};
     accessKeyForm.value = localStorage.getItem('accessKey') ?? '';
     useThirdPartyApiCheckbox.selected = localStorage.getItem('useThirdPartyApi') == 'true';
     apiUriForm.value = localStorage.getItem('apiUri') ?? '';
+    if(useThirdPartyApiCheckbox.selected == true){
+        apiUriForm.style.display = '';
+    }else{
+        apiUriForm.style.display = 'none';
+    }
     suspendSaving.suspendSaving = false;
 })();
 export let func = async()=>{

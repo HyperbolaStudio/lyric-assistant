@@ -13,7 +13,6 @@ import { func, suspendSaving } from './autosave';
     useThirdPartyApiCheckbox.onclick = null;
     useThirdPartyApiCheckbox.onclick = async()=>{
         if(f)await (f as any)();
-        console.log(1);
         if(useThirdPartyApiCheckbox.selected == true){
             apiUriForm.style.display = '';
         }else{
