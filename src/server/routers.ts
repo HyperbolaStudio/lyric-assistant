@@ -21,7 +21,7 @@ export function routers(server: Server){
         },
         handler: (request, h)=>{
             try{
-                debugLogger.debug(`Request: %s %s %s`, request.info.id, request.path, request.headers['X-Forwarded-For'] || request.info.remoteAddress);
+                debugLogger.debug(`Request: %s %s %s`, request.info.id, request.path, request.headers['x-forwarded-for'] || request.info.remoteAddress);
                 return {
                     status: ListStatus.OK,
                     body: config.corpus.map(v=>({
@@ -49,7 +49,7 @@ export function routers(server: Server){
             }
         },
         handler: async (request,h)=>{
-            debugLogger.debug(`Request: %s %s %s`, request.info.id, request.path, request.headers['X-Forwarded-For'] || request.info.remoteAddress);
+            debugLogger.debug(`Request: %s %s %s`, request.info.id, request.path, request.headers['x-forwarded-for'] || request.info.remoteAddress);
             try{
                 let query = request.payload;
                 if(!ajv.compile<QueryRequest>(queryRequestSchema)(query)) return {
