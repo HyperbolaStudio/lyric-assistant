@@ -22369,6 +22369,12 @@ exports.suspendSaving = { suspendSaving: true };
     _1.accessKeyForm.value = (_j = localStorage.getItem('accessKey')) !== null && _j !== void 0 ? _j : '';
     _1.useThirdPartyApiCheckbox.selected = localStorage.getItem('useThirdPartyApi') == 'true';
     _1.apiUriForm.value = (_k = localStorage.getItem('apiUri')) !== null && _k !== void 0 ? _k : '';
+    if (_1.useThirdPartyApiCheckbox.selected == true) {
+        _1.apiUriForm.style.display = '';
+    }
+    else {
+        _1.apiUriForm.style.display = 'none';
+    }
     exports.suspendSaving.suspendSaving = false;
 })();
 let func = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -22443,7 +22449,6 @@ const autosave_1 = __webpack_require__(/*! ./autosave */ "./out/client/autosave.
     _1.useThirdPartyApiCheckbox.onclick = () => __awaiter(void 0, void 0, void 0, function* () {
         if (f)
             yield f();
-        console.log(1);
         if (_1.useThirdPartyApiCheckbox.selected == true) {
             _1.apiUriForm.style.display = '';
         }
