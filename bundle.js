@@ -22459,7 +22459,10 @@ const autosave_1 = __webpack_require__(/*! ./autosave */ "./out/client/autosave.
 })();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
+    console.log(1);
     let list = yield (0, syncCorpusList_1.syncCorpusList)();
+    if (!list)
+        return;
     autosave_1.suspendSaving.suspendSaving = true;
     _1.libraryForm.append(...list.map(entry => {
         let elm = document.createElement('mwc-list-item');
