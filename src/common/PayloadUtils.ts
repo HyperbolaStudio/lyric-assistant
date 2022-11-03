@@ -17,12 +17,14 @@ export enum WordMode{
     Any,
     Head,
     Tail,
+    Advanced,
 }
 
 export function convertWordMode(s: string){
     switch(s){
         case 'head': return WordMode.Head;
         case 'tail': return WordMode.Tail;
+        case 'advanced': return WordMode.Advanced;
         default: return WordMode.Any;
     }
 }
