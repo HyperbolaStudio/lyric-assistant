@@ -22818,11 +22818,13 @@ var WordMode;
     WordMode[WordMode["Any"] = 0] = "Any";
     WordMode[WordMode["Head"] = 1] = "Head";
     WordMode[WordMode["Tail"] = 2] = "Tail";
+    WordMode[WordMode["Advanced"] = 3] = "Advanced";
 })(WordMode = exports.WordMode || (exports.WordMode = {}));
 function convertWordMode(s) {
     switch (s) {
         case 'head': return WordMode.Head;
         case 'tail': return WordMode.Tail;
+        case 'advanced': return WordMode.Advanced;
         default: return WordMode.Any;
     }
 }
