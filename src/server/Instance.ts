@@ -8,8 +8,8 @@ import { QueryResponseBody, Vowel } from "../common/PayloadUtils";
 
 export class Instance{
 
-    corpusMap: Record<string, sqlite.Database> = {};
-    userList?: Record<string, UserListUtils.UserInfo> = {};
+    corpusMap: Map<string, sqlite.Database> = new Map();
+    userList?: Map<string, UserListUtils.UserInfo> = new Map();
     authDatabase?: sqlite.Database;
     server: hapi.Server = hapi.server({
         port: config.port,
@@ -19,10 +19,10 @@ export class Instance{
     async connectCorpusDatabase(){
         config.corpus.forEach(async corpus=>{
             try{
-                this.corpusMap[corpus.name] =  await sqlite.open({
+                this.corpusMap.set(corpus.name, await sqlite.open({
                     filename: corpus.path,
                     driver: sqlite3.Database,
-                });
+                }));
                 logger.info(`Corpus database %s connected.`, corpus.name);
             }catch(e: any){
                 logger.fatal(`Unable to connect corpus database %s.\n%s`, corpus.name, e.stack ?? e);
@@ -67,12 +67,16 @@ export class Instance{
 
     hasUser(accessKey: string){
         if(!this.userList)return true;
-        return accessKey in this.userList
+        return this.userList.has(accessKey);
     }
 
     async getQueryNumbers(accessKey: string){
         if(this.authDatabase && this.userList){
-            let total = this.userList[accessKey].maxQueries;
+            let entry = this.userList.get(accessKey);
+            if(!entry){
+                throw new Error(`User not exist: ${accessKey}`);
+            }
+            let total = entry.maxQueries;
             let res = await this.authDatabase.get(`SELECT * FROM auth WHERE access_key = ?`,accessKey);
             if(res){
                 if(Math.floor(Date.now()/86400000) > Math.floor(new Date(res.last_query_time).getTime()/86400000)){
@@ -136,7 +140,11 @@ export class Instance{
             excludeCondition = `(${patternsExclude.map(()=>'NOT line LIKE ?').join(' AND ')})`;
         }
         let query = [queryPrefix, vowelCondition, 'AND', includeCondition, 'AND', excludeCondition, querySuffix].join(' ');
-        let res = await this.corpusMap[corpus].all<QueryResponseBody>(query, ...vowels, ...patternsInclude, ...patternsExclude);
+        let entry = this.corpusMap.get(corpus);
+        if(!entry){
+            throw new Error(`Corpus not exist: ${corpus}`);
+        }
+        let res = await entry.all<QueryResponseBody>(query, ...vowels, ...patternsInclude, ...patternsExclude);
         return res;
     }
 }

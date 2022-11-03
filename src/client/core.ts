@@ -22,7 +22,9 @@ import { func, suspendSaving } from './autosave';
 })();
 
 (async()=>{
-    let list: CorpusEntry[] = await syncCorpusList();
+    console.log(1);
+    let list: CorpusEntry[]|undefined = await syncCorpusList();
+    if(!list)return;
     suspendSaving.suspendSaving = true;
     libraryForm.append(...list.map(entry=>{
         let elm = document.createElement('mwc-list-item');

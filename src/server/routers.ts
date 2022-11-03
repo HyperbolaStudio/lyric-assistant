@@ -70,7 +70,7 @@ export function routers(server: Server){
                     status: QueryResponseStatus.QueryNumberLimitExceeded,
                     message: `Daily query count limit exceeded. Total ${queryNumberInfo.total}, available ${queryNumberInfo.available}, but queried ${query.queryNumber}. Please retry tomorrow.`,
                 }
-                if(!(query.library in instance.corpusMap)) return {
+                if(!(instance.corpusMap.has(query.library))) return {
                     status: QueryResponseStatus.CorpusLibraryNotExist,
                     message: `Queried library ${query.library} does not exist.`,
                 }

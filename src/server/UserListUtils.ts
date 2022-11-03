@@ -20,10 +20,7 @@ export namespace UserListUtils {
                 if(!ajv.compile<UserData[]>(userListSchema)(userListArray)){
                     throw new Error(`Invalid user list schema. See documentation for details`);
                 }
-                let userList: Record<string, UserInfo> = {};
-                userListArray.forEach(userData=>{
-                    userList[userData.accessKey] = userData.userInfo;
-                });
+                let userList: Map<string, UserInfo> = new Map(userListArray.map(v=>[v.accessKey, v.userInfo]));
                 return userList;
             }catch(e: any){
                 logger.fatal(`Unable to read user list.\n${e.stack ?? e}`);

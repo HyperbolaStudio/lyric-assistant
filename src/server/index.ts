@@ -19,7 +19,7 @@ process.on('exit', ()=>{
 export const instance = new Instance();
 
 if(process.argv[2]){
-    if(process.argv[2] in Utils){
+    if(Utils.hasOwnProperty(process.argv[2])){
         (Utils as any)[process.argv[2]](...process.argv.slice(3));
     }else{
         logger.fatal(`Invalid util name: %s`, process.argv[2]);
